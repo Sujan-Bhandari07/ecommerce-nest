@@ -29,6 +29,9 @@
       ],
       "@ecommerce/medias": [
         "./libs/medias/src/index.ts"
+      ],
+      "@ecommerce/filters": [
+        "./libs/filters/src/index.ts"
       ]
     }
   },
