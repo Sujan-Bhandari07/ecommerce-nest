@@ -1,0 +1,24 @@
+{
+  "name": "payment-e2e",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": [
+    "payment"
+  ],
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{e2eProjectRoot}"
+      ],
+      "dependsOn": [
+        "payment:build",
+        "payment:serve"
+      ],
+      "options": {
+        "jestConfig": "apps/api/payment-e2e/jest.config.cts",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
