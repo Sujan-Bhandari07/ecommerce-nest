@@ -1,8 +1,32 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { RpcException } from '@nestjs/microservices';
+import { Readable } from 'stream';
+import { UploadedImage } from '@ecommerce/medias';
+import { CLOUDINARY } from './cloudinary.provider';
 
 @Injectable()
 export class AppService {
-  getData(): { message: string } {
-    return ({ message: 'Hello API' });
+  constructor(@Inject(CLOUDINARY) private readonly cloudinary: any) {}
+
+  upload(buffer: Buffer, folder = 'uploads'): Promise<UploadedImage> {
+    return new Promise((resolve, reject) => {
+      const stream = this.cloudinary.uploader.upload_stream(
+        { folder, resource_type: 'image' },
+        (error: any, result: any) => {
+          if (error || !result) {
+            return reject(
+              new RpcException({ statusCode: 502, message: 'Image upload failed' }),
+            );
+          }
+          resolve({ url: result.secure_url, publicId: result.public_id });
+        },
+      );
+      Readable.from(buffer).pipe(stream);
+    });
+  }
+
+  async delete(publicId: string) {
+    await this.cloudinary.uploader.destroy(publicId);
+    return { deleted: true };
   }
 }

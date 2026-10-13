@@ -26,6 +26,9 @@
       ],
       "@ecommerce/redis": [
         "./libs/redis/src/index.ts"
+      ],
+      "@ecommerce/medias": [
+        "./libs/medias/src/index.ts"
       ]
     }
   },
